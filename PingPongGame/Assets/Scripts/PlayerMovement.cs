@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -8,12 +9,13 @@ public class PlayerMovement : MonoBehaviour
     public float playerSpeed = 2.0f;
     public float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
-    private float gravityMultiplier = 20f;
+    private float gravityMultiplier = 1f;
     private Joystick _joystick;
     private float _elapsedTime;
     public float _touchSensivity = 0.5f;
     private float moving;
     Animator _animator;
+    private Vector3 move;
    
     
     private void Start()
@@ -40,20 +42,20 @@ public class PlayerMovement : MonoBehaviour
             if (_elapsedTime < _touchSensivity && groundedPlayer && Time.timeScale !=0)
             {
                 //Jump
-                playerVelocity.y += Mathf.Sqrt(jumpHeight  * -3 * gravityValue);
+                playerVelocity.y = Mathf.Sqrt(jumpHeight  * -3 * gravityValue);
                 _animator.SetTrigger("Jump");
                 
             }
 
             _elapsedTime = 0;
         }
-        if (playerVelocity.y < 0)
+        if (playerVelocity.y < 0f)
         {
             playerVelocity.y = 0f;
         }
         // Move
-        Vector3 move = new Vector3(_joystick.Horizontal, 0, _joystick.Vertical);
-        controller.Move(move * Time.deltaTime * playerSpeed);
+        move = new Vector3(_joystick.Horizontal, 0, _joystick.Vertical);
+       
 
         if (move != Vector3.zero)
         {
@@ -61,6 +63,10 @@ public class PlayerMovement : MonoBehaviour
         }
         // Call gravity to party!
         playerVelocity.y += gravityValue *gravityMultiplier* Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        controller.Move((move+playerVelocity) * Time.deltaTime * playerSpeed);
     }
 }

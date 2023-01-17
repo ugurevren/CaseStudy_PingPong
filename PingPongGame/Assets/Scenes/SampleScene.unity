@@ -7172,7 +7172,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1065322167, guid: 3e09fd154db7d6a48b44446d7cb453b8, type: 3}
       propertyPath: jumpHeight
-      value: 30
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1065322167, guid: 3e09fd154db7d6a48b44446d7cb453b8, type: 3}
       propertyPath: playerSpeed
