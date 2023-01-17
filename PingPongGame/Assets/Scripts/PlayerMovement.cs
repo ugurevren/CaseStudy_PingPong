@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -12,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float playerSpeed = 2.0f;
     public float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
-    private float gravitiyMultiplier = 20f;
+    private float gravityMultiplier = 20f;
     private Joystick _joystick;
     private float _elapsedTime;
     public float _touchSensivity = 0.5f;
@@ -30,18 +26,20 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         groundedPlayer = controller.isGrounded;
-        
         moving = _joystick.Direction.magnitude;
         _animator.SetFloat("moving",moving);
         
         
         if (Input.GetMouseButton(0))
         {
+            // Start chronometer for reach touch sensivity
+            // Understand is player wants to move or jump
             _elapsedTime += Time.deltaTime;
         } else if (Input.GetMouseButtonUp(0))
         {
-            if (_elapsedTime < _touchSensivity && groundedPlayer)
+            if (_elapsedTime < _touchSensivity && groundedPlayer && Time.timeScale !=0)
             {
+                //Jump
                 playerVelocity.y += Mathf.Sqrt(jumpHeight  * -3 * gravityValue);
                 _animator.SetTrigger("Jump");
                 
@@ -49,12 +47,11 @@ public class PlayerMovement : MonoBehaviour
 
             _elapsedTime = 0;
         }
-        //groundedPlayer = true;
         if (playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
         }
-
+        // Move
         Vector3 move = new Vector3(_joystick.Horizontal, 0, _joystick.Vertical);
         controller.Move(move * Time.deltaTime * playerSpeed);
 
@@ -62,8 +59,8 @@ public class PlayerMovement : MonoBehaviour
         {
             gameObject.transform.forward = move;
         }
-
-        playerVelocity.y += gravityValue *gravitiyMultiplier* Time.deltaTime;
+        // Call gravity to party!
+        playerVelocity.y += gravityValue *gravityMultiplier* Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
     }
 }
